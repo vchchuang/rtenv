@@ -106,7 +106,7 @@ void show_cmd_info(int argc, char *argv[]);
 void show_task_info(int argc, char *argv[]);
 void show_man_page(int argc, char *argv[]);
 void show_history(int argc, char *argv[]);
-
+void show_hello(int argc ,char *argv[]);
 /* Enumeration for command types. */
 enum {
 	CMD_ECHO = 0,
@@ -115,7 +115,8 @@ enum {
 	CMD_HISTORY,
 	CMD_MAN,
 	CMD_PS,
-	CMD_COUNT
+	CMD_HELLO,
+      CMD_COUNT
 } CMD_TYPE;
 /* Structure for command handler. */
 typedef struct {
@@ -129,7 +130,8 @@ const hcmd_entry cmd_data[CMD_COUNT] = {
 	[CMD_HELP] = {.cmd = "help", .func = show_cmd_info, .description = "List all commands you can use."},
 	[CMD_HISTORY] = {.cmd = "history", .func = show_history, .description = "Show latest commands entered."}, 
 	[CMD_MAN] = {.cmd = "man", .func = show_man_page, .description = "Manual pager."},
-	[CMD_PS] = {.cmd = "ps", .func = show_task_info, .description = "List all the processes."}
+	[CMD_PS] = {.cmd = "ps", .func = show_task_info, .description = "List all the processes."},
+	[CMD_HELLO] = {.cmd = "hello" ,.func = show_hello ,.description = "Hello World."}
 };
 
 /* Structure for environment variables. */
@@ -772,6 +774,12 @@ void show_history(int argc, char *argv[])
 			write(fdout, next_line, 3);
 		}
 	}
+}
+
+void show_hello(int argc ,char *argv[]){
+	int fdout = open("/dev/tty0/out", 0);
+	
+        write(fdout, "\nHello World.",20);
 }
 
 int write_blank(int blank_num)
