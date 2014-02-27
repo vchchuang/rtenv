@@ -99,6 +99,8 @@ int cur_his=0;
 int fdout;
 int fdin;
 
+/*define CMD struct by using Macro*/
+#define DCMD(a ,b ,c ,d)[a] = {.cmd = b ,.func = c ,.description = d}
 /* Command handlers. */
 void export_envvar(int argc, char *argv[]);
 void show_echo(int argc, char *argv[]);
@@ -124,14 +126,15 @@ typedef struct {
 	void (*func)(int, char**);
 	char description[MAX_CMDHELP + 1];
 } hcmd_entry;
-const hcmd_entry cmd_data[CMD_COUNT] = {
-	[CMD_ECHO] = {.cmd = "echo", .func = show_echo, .description = "Show words you input."},
-	[CMD_EXPORT] = {.cmd = "export", .func = export_envvar, .description = "Export environment variables."},
-	[CMD_HELP] = {.cmd = "help", .func = show_cmd_info, .description = "List all commands you can use."},
-	[CMD_HISTORY] = {.cmd = "history", .func = show_history, .description = "Show latest commands entered."}, 
-	[CMD_MAN] = {.cmd = "man", .func = show_man_page, .description = "Manual pager."},
-	[CMD_PS] = {.cmd = "ps", .func = show_task_info, .description = "List all the processes."},
-	[CMD_HELLO] = {.cmd = "hello" ,.func = show_hello ,.description = "Hello World."}
+const hcmd_entry cmd_data[CMD_COUNT] = { //DCMD is Macro
+	DCMD(CMD_ECHO ,"echo" ,show_echo ,"Show words you input."),
+	DCMD(CMD_EXPORT ,"export" ,export_envvar ,"Export environment variables."),
+	DCMD(CMD_HELP ,"help" ,show_cmd_info ,"List all commands you can use."),
+	DCMD(CMD_HISTORY ,"history" ,show_history ,"Show latest commands entered."),
+	DCMD(CMD_MAN ,"man" ,show_man_page ,"Manual pager."),
+
+	DCMD(CMD_PS ,"ps" ,show_task_info ,"List all the processes."),
+	DCMD(CMD_HELLO ,"hello" ,show_hello ,"Hello World.")
 };
 
 /* Structure for environment variables. */
@@ -779,7 +782,7 @@ void show_history(int argc, char *argv[])
 void show_hello(int argc ,char *argv[]){
 	int fdout = open("/dev/tty0/out", 0);
 	
-        write(fdout, "\nHello World.",20);
+        write(fdout, "\nHello World.",13);
 }
 
 int write_blank(int blank_num)
