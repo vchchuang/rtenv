@@ -100,7 +100,7 @@ int fdout;
 int fdin;
 
 /*define CMD struct by using Macro*/
-#define Set_CMD(a ,b ,c ,d)[a] = {.cmd = b ,.func = c ,.description = d}
+#define CMD_DECL(a ,b ,c ,d)[a] = {.cmd = b ,.func = c ,.description = d}
 /* Command handlers. */
 void export_envvar(int argc, char *argv[]);
 void show_echo(int argc, char *argv[]);
@@ -126,15 +126,14 @@ typedef struct {
 	void (*func)(int, char**);
 	char description[MAX_CMDHELP + 1];
 } hcmd_entry;
-const hcmd_entry cmd_data[CMD_COUNT] = { //Set_CMD is Macro
-	Set_CMD(CMD_ECHO ,"echo" ,show_echo ,"Show words you input."),
-	Set_CMD(CMD_EXPORT ,"export" ,export_envvar ,"Export environment variables."),
-	Set_CMD(CMD_HELP ,"help" ,show_cmd_info ,"List all commands you can use."),
-	Set_CMD(CMD_HISTORY ,"history" ,show_history ,"Show latest commands entered."),
-	Set_CMD(CMD_MAN ,"man" ,show_man_page ,"Manual pager."),
-
-	Set_CMD(CMD_PS ,"ps" ,show_task_info ,"List all the processes."),
-	Set_CMD(CMD_HELLO ,"hello" ,show_hello ,"Hello World.")
+const hcmd_entry cmd_data[CMD_COUNT] = { //CMD_DECL is Macro
+	CMD_DECL(CMD_ECHO ,"echo" ,show_echo ,"Show words you input."),
+	CMD_DECL(CMD_EXPORT ,"export" ,export_envvar ,"Export environment variables."),
+	CMD_DECL(CMD_HELP ,"help" ,show_cmd_info ,"List all commands you can use."),
+	CMD_DECL(CMD_HISTORY ,"history" ,show_history ,"Show latest commands entered."),
+	CMD_DECL(CMD_MAN ,"man" ,show_man_page ,"Manual pager."),
+	CMD_DECL(CMD_PS ,"ps" ,show_task_info ,"List all the processes."),
+	CMD_DECL(CMD_HELLO ,"hello" ,show_hello ,"Hello World.")
 };
 
 /* Structure for environment variables. */
