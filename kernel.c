@@ -100,7 +100,7 @@ int fdout;
 int fdin;
 
 /*define CMD struct by using Macro*/
-#define CMD_DECL(a ,b ,c ,d)[a] = {.cmd = b ,.func = c ,.description = d}
+#define CMD_DECL(a ,b ,c ,d)[CMD_ ## a] = {.cmd = b ,.func = c ,.description = d}
 /* Command handlers. */
 void export_envvar(int argc, char *argv[]);
 void show_echo(int argc, char *argv[]);
@@ -127,13 +127,13 @@ typedef struct {
 	char description[MAX_CMDHELP + 1];
 } hcmd_entry;
 const hcmd_entry cmd_data[CMD_COUNT] = { //CMD_DECL is Macro
-	CMD_DECL(CMD_ECHO ,"echo" ,show_echo ,"Show words you input."),
-	CMD_DECL(CMD_EXPORT ,"export" ,export_envvar ,"Export environment variables."),
-	CMD_DECL(CMD_HELP ,"help" ,show_cmd_info ,"List all commands you can use."),
-	CMD_DECL(CMD_HISTORY ,"history" ,show_history ,"Show latest commands entered."),
-	CMD_DECL(CMD_MAN ,"man" ,show_man_page ,"Manual pager."),
-	CMD_DECL(CMD_PS ,"ps" ,show_task_info ,"List all the processes."),
-	CMD_DECL(CMD_HELLO ,"hello" ,show_hello ,"Hello World.")
+	CMD_DECL(ECHO ,"echo" ,show_echo ,"Show words you input."),
+	CMD_DECL(EXPORT ,"export" ,export_envvar ,"Export environment variables."),
+	CMD_DECL(HELP ,"help" ,show_cmd_info ,"List all commands you can use."),
+	CMD_DECL(HISTORY ,"history" ,show_history ,"Show latest commands entered."),
+	CMD_DECL(MAN ,"man" ,show_man_page ,"Manual pager."),
+	CMD_DECL(PS ,"ps" ,show_task_info ,"List all the processes."),
+	CMD_DECL(HELLO , "hello",show_hello,"Hello World.")
 };
 
 /* Structure for environment variables. */
@@ -1142,7 +1142,7 @@ int main()
 		tasks[current_task].status = TASK_READY;
 		timeup = 0;
 
-		switch (tasks[current_task].stack->r8) {
+		switch (tasks[current_task].stack->r4) {
 		case 0x1: /* fork */
 			if (task_count == TASK_LIMIT) {
 				/* Cannot create a new task, return error */
