@@ -28,7 +28,7 @@ SVC_Handler:
 	/* save user state */
 	mrs r0, psp
 	stmdb r0!, {r8}
-	stmdb r0!, {r8, r5, r6, r7, r4, r9, r10, r11, lr}
+	stmdb r0!, {r4, r5, r6, r7, r8, r9, r10, r11, lr}
 
 	/* load kernel state */
 	pop {r4, r5, r6, r7, r8, r9, r10, r11, ip, lr}
@@ -48,7 +48,7 @@ activate:
 	msr control, r0
 	
 	/* load user state */
-	pop {r8, r5, r6, r7, r4, r9, r10, r11, lr}
+	pop {r4, r5, r6, r7, r8, r9, r10, r11, lr}
 	pop {r8}
 
 	bx lr

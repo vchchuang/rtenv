@@ -5,6 +5,13 @@
 
 #include <stddef.h>
 
+void *malloc(size_t size)
+{
+	static char m[1024] = {0};
+	return m;
+}
+
+
 void *memcpy(void *dest, const void *src, size_t n);
 
 int strcmp(const char *a, const char *b) __attribute__ ((naked));
@@ -1142,7 +1149,7 @@ int main()
 		tasks[current_task].status = TASK_READY;
 		timeup = 0;
 
-		switch (tasks[current_task].stack->r4) {
+		switch (tasks[current_task].stack->r8) {
 		case 0x1: /* fork */
 			if (task_count == TASK_LIMIT) {
 				/* Cannot create a new task, return error */
