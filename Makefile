@@ -128,6 +128,8 @@ check: unit_test.c unit_test.h
 	$(CROSS_COMPILE)gdb -batch -x test-export_envvar.in
 	@mv -f gdb.txt $(CHECK_RESULTS)test-export_envvar.txt
 	@echo
+	$(CROSS_COMPILE)gdb -batch -x test-cmd-hello.in
+	@mv -f gdb.txt $(CHECK_RESULTS)test-cmd-hello.txt
 	@pkill -9 $(notdir $(QEMU_STM32))
 
 clean:

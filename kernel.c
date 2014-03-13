@@ -11,7 +11,6 @@ void *malloc(size_t size)
 	return m;
 }
 
-
 void *memcpy(void *dest, const void *src, size_t n);
 
 int strcmp(const char *a, const char *b) __attribute__ ((naked));
@@ -115,7 +114,7 @@ void show_cmd_info(int argc, char *argv[]);
 void show_task_info(int argc, char *argv[]);
 void show_man_page(int argc, char *argv[]);
 void show_history(int argc, char *argv[]);
-void show_hello(int argc ,char *argv[]);
+int show_hello();
 /* Enumeration for command types. */
 enum {
 	CMD_ECHO = 0,
@@ -785,10 +784,10 @@ void show_history(int argc, char *argv[])
 	}
 }
 
-void show_hello(int argc ,char *argv[]){
+int show_hello(){
 	int fdout = open("/dev/tty0/out", 0);
-	
-        write(fdout, "\nHello World.",13);
+
+        return write(fdout, "\nHello World.",13);
 }
 
 int write_blank(int blank_num)

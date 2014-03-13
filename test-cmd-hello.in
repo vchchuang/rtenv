@@ -1,0 +1,7 @@
+source qemudbg_init.in
+set logging on
+if !(show_hello() < 0)
+   printf "Pass: \"Hello World.\" function works correctly\n"
+else
+   printf "Fail: Error!!\n"
+end
