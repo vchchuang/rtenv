@@ -1,7 +1,6 @@
 CROSS_COMPILE ?= arm-none-eabi-
 CC := $(CROSS_COMPILE)gcc
 QEMU_STM32 ?= ../qemu_stm32/arm-softmmu/qemu-system-arm
-CHECK_RESULTS ?= ./check_results/
 
 ARCH = CM3
 VENDOR = ST
@@ -13,6 +12,10 @@ STM32_LIB=$(LIBDIR)/libraries/STM32F10x_StdPeriph_Driver
 
 CMSIS_PLAT_SRC = $(CMSIS_LIB)/DeviceSupport/$(VENDOR)/$(PLAT)
 
+MAKDIR = mk
+MAK = $(wildcard $(MAKDIR)/*.mk)
+
+include $(MAK)
 all: main.bin
 
 main.bin: kernel.c context_switch.s syscall.s syscall.h
@@ -91,46 +94,7 @@ qemuauto_remote: main.bin gdbscript
 	$(CROSS_COMPILE)gdb -x gdbscript&
 	sleep 5
 
-check: unit_test.c unit_test.h
-	$(MAKE) main.bin DEBUG_FLAGS=-DDEBUG
-	$(QEMU_STM32) -nographic -M stm32-p103 \
-		-gdb tcp::3333 -S \
-		-serial stdio \
-		-kernel main.bin -monitor null >/dev/null &
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-strlen.in
-	@mv -f  gdb.txt $(CHECK_RESULTS)test-strlen.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-strcpy.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-strcpy.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-strcmp.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-strcmp.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-strncmp.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-strncmp.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-cmdtok.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-cmdtok.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-itoa.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-itoa.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-find_events.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-find_events.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-find_envvar.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-find_envvar.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-fill_arg.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-fill_arg.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-export_envvar.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-export_envvar.txt
-	@echo
-	$(CROSS_COMPILE)gdb -batch -x test-cmd-hello.in
-	@mv -f gdb.txt $(CHECK_RESULTS)test-cmd-hello.txt
-	@pkill -9 $(notdir $(QEMU_STM32))
-
 clean:
 	rm -f *.elf *.bin *.list test-*.txt
+
+-include $(DEP)
